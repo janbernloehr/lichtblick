@@ -8,6 +8,8 @@
 import { CameraInfo, ICameraModel } from "@lichtblick/suite";
 
 import { PinholeCameraModel } from "./PinholeCameraModel";
+import { CylinderCameraModel } from "./CylinderCameraModel";
+import { DeformedCylinderCameraModel } from "./DeformedCylinderCameraModel";
 import { CameraModelsMap } from "./types";
 
 export const selectCameraModel = (
@@ -17,6 +19,11 @@ export const selectCameraModel = (
   const cameraModel = cameraModels.get(cameraInfo.distortion_model);
   if (cameraModel) {
     return cameraModel.modelBuilder(cameraInfo);
+  }
+  if (cameraInfo.distortion_model === "cylindrical") {
+    return new CylinderCameraModel(cameraInfo);
+  } else if (cameraInfo.distortion_model === "deformed_cylinder") {
+    return new DeformedCylinderCameraModel(cameraInfo);
   }
   return new PinholeCameraModel(cameraInfo);
 };
